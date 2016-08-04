@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Scanner</string>
+
+    <!-- Request Permission -->
+    <string name="permission_camera_retry">Camera permission is required for scanning barcode. Tap to retry </string>
+    <string name="permission_camera_setting">Camera permission is required for scanning barcode. Go to setting and turn on the camera </string>
+    <string name="permission_stng_btn">SETTINGS</string>
+    <string name="permission_retry_btn">RETRY</string>
+
+    <string name="title_activity_bar_code">Scan %s Barcode</string>
+    <string name="label_activity_bar_code">Scan Barcode</string>
+    <string name="qr_hint">Enter %s barcode here</string>
+    <string name="done">Done</string>
+    <string name="item_already_scaned">Item already scanned</string>
+    <string name="scanned_item_count">Scanning %1$d of %2$d</string>
+    <string name="scanned_count">%1$d items scanned</string>
+    <string name="shipment">shipment</string>
+    <string name="bag">bag</string>
+
+
+    <string name="dialog_invalid_barcode_title">Invalid barcode</string>
+    <string name="dialog_invalid_barcode_msg">Barcode %1$s does not match with our database.\nPlease scan again.</string>
+    <string name="dialog_invalid_barcode_positive_button">Retry</string>
+    <string name="no_item_scan">No items scanned</string>
+
+</resources>

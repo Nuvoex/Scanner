@@ -1,0 +1,22 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorAccent">@color/color_accent</item>
+    </style>
+
+    <!--Button Styles-->
+    <style name="Button" parent="Widget.AppCompat.Button" />
+
+    <style name="Button.Green">
+        <item name="android:textColor">@color/text_primary_inverse</item>
+    </style>
+
+    <!--Full Width Button without shadow-->
+    <style name="Button.Green.BorderLess">
+        <item name="android:background">@drawable/green_btn</item>
+    </style>
+</resources>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_primary">#0f303e</color>
+    <color name="color_primary_dark">#0c2733</color>
+    <color name="color_accent">#38ab57</color>
+
+    <!-- Color pallete from Zeplin -->
+    <color name="black_54">#8a000000</color>
+    <color name="black_38">#60000000</color>
+    <color name="marine">#062d48</color>
+    <color name="cloudy_blue">#b0c1cb</color>
+    <color name="black_87">#dd000000</color>
+    <color name="black_15">#26000000</color>
+    <color name="warm_grey">#999999</color>
+
+<!--    &lt;!&ndash;Details&ndash;&gt;
+    <color name="detail_heading">#788388</color>
+    <color name="detail_name">#0f303e</color>
+    <color name="detail_backgound">#99f1f5f7</color>
+    <color name="detail_divider">#6bbdc5ca</color>-->
+
+    Log In
+    <color name="login_greyCard">#a6ffffff</color>
+    <color name="login_forgotPwd">#80000000</color>
+
+    <!--Common-->
+    <color name="background">@android:color/white</color>
+    <color name="green_btn_pressed">#198335</color>
+    <color name="top_bar_grey">#f7f9f9</color>
+
+    <!--QR Code-->
+    <color name="qr_bottom_bg">#b2202428</color>
+    <color name="qr_hint">#80ffffff</color>
+    <color name="white">#ffffff</color>
+
+
+    <!--Text-->
+    <color name="text_primary_inverse">#deffffff</color>
+
+    <!--Bag List
+    <color name="bag_details">#8b000000</color>
+    <color name="bag_missing">#d0021b</color>
+    <color name="bag_received">@color/color_accent</color>
+    <color name="bag_not_accept">#bdc6ca</color>
+    <color name="bag_damaged">#f5a623</color>
+    <color name="bag_damage_card">#fafafa</color>
+    <color name="bag_damage_menu">#de000000</color>
+
+    <color name="black_3">#08000000</color>
+    <color name="black_75">#bf000000</color>
+
+    &lt;!&ndash;Home&ndash;&gt;
+    <color name="home_qty_box">#54e7ebed</color>
+    <color name="home_package_titles">#bf000000</color>
+    <color name="home_qty">#38ab57</color>
+    <color name="home_border">#cecece</color>
+
+    <color name="nav_drawer_name">#fafafa</color>
+
+    &lt;!&ndash;Empty Screen&ndash;&gt;
+    <color name="empty_subTitle">#8b000000</color>
+    <color name="black_54_two">#8b000000</color>-->
+</resources>
