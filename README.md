@@ -36,6 +36,28 @@ Barcode Validation :
 -  prefetch list .
 - Verhoeff algo .
 
+# Download
+
+Include `jitpack.io` inside of **root** project `build.gradle`:
+
+```groovy
+allprojects {
+		repositories {
+			...
+			maven { url "https://jitpack.io" }
+		}
+	}
+```
+
+After that you can easily include the library in your **app** `build.gradle`:
+
+```groovy
+dependencies {
+	        compile 'com.github.Nuvoex:Scanner:v1.0'
+	}
+```
+
+That's it build your project.
 
 
 
