@@ -22,6 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.zxing.Result;
+import com.nuvoex.library.permission.MarshmallowSupportActivity;
+import com.nuvoex.library.permission.Permission;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,13 +125,30 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
         flash = findViewById(R.id.flash);
     }
 
-    @Override
-    public void onPermissionGranted(int requestCode, @Nullable FragmentPermissionCallback permissionCallback) {
-    }
 
     private void checkPermissionCamera() {
-        requestAppPermissions(PHOTO_ACTIVITY_CAMERA_PERMISSIONS, PHOTO_ACTIVITY_REQUEST_CARMERA_AND_READ_WRITE);
+        Permission.PermissionBuilder builder = new Permission.PermissionBuilder(PHOTO_ACTIVITY_CAMERA_PERMISSIONS, PHOTO_ACTIVITY_REQUEST_CARMERA_AND_READ_WRITE, mPermissionCallBack)
+                .enableDefaultSettingDialog("", getString(R.string.permission_camera_setting))
+                .enableDefaultRationalDialog("", getString(R.string.permission_camera_retry));
+        requestAppPermissions(builder.build());
     }
+
+    private Permission.PermissionCallback mPermissionCallBack = new Permission.PermissionCallback() {
+        @Override
+        public void onPermissionGranted(int requestCode) {
+
+        }
+
+        @Override
+        public void onPermissionDenied(int requestCode) {
+
+        }
+
+        @Override
+        public void onPermissionAccessRemoved(int requestCode) {
+
+        }
+    };
 
     private void setupToolBar() {
         setSupportActionBar(mToolbar);
