@@ -4,8 +4,6 @@
     <!-- Request Permission -->
     <string name="permission_camera_retry">Camera permission is required for scanning barcode. Tap to retry </string>
     <string name="permission_camera_setting">Camera permission is required for scanning barcode. Go to setting and turn on the camera </string>
-    <string name="permission_stng_btn">SETTINGS</string>
-    <string name="permission_retry_btn">RETRY</string>
 
     <string name="title_activity_bar_code">Scan %s Barcode</string>
     <string name="label_activity_bar_code">Scan Barcode</string>
