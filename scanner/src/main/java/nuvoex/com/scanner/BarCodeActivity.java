@@ -39,6 +39,7 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
     public static final String BUNDLE_SCAN_ITEM_COUNT = "bundle_scan_item_count";
     public static final String BUNDLE_SCAN_ITEM_INDICATOR = "bundle_scan_item_indicator";
     public static final String BUNDLE_SCANNED_BARCODE_LIST = "bundle_scanned_barcode_list";
+    public static final String BUNDLE_SKIP_CHECKSUM = "bundle_skip_checksum";
     private static final int PHOTO_ACTIVITY_REQUEST_CARMERA_AND_READ_WRITE = 50;
     private static final String[] PHOTO_ACTIVITY_CAMERA_PERMISSIONS = {Manifest.permission.CAMERA};
     FrameLayout mScannerContainer;
@@ -62,6 +63,8 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
     private String mItemIndicator;
     private MediaPlayer mediaPlayer;
 
+    private boolean mSkipChecksum;
+
     private enum ValidationResult {
         INVALID,
         VALID,
@@ -79,6 +82,7 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
         if (mPrefetchList != null) {
             mBarCodeCount = mPrefetchList.size();
         }
+        mSkipChecksum = getIntent().getBooleanExtra(BUNDLE_SKIP_CHECKSUM, false);
 
         setContentView(R.layout.activity_bar_code);
         initView();
@@ -263,6 +267,11 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
             } else {
                 return ValidationResult.INVALID;
             }
+        }
+
+        //verhoeff check not required
+        if (mSkipChecksum) {
+            return ValidationResult.VALID;
         }
 
         //verhoeff check
