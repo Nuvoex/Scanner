@@ -65,7 +65,7 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
     private enum ValidationResult {
         INVALID,
         VALID,
-        SCANNED;
+        SCANNED
     }
 
     @Override
