@@ -35,9 +35,10 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
 
 
     public static final String BUNDLE_BARCODE_LIST = "bundle_barcode_list";
-    public static final String BUNDLE_PREFETCH_BARCODE_LIST = "bundle__prefetch_barcode_list";
+    public static final String BUNDLE_PREFETCH_BARCODE_LIST = "bundle_prefetch_barcode_list";
     public static final String BUNDLE_SCAN_ITEM_COUNT = "bundle_scan_item_count";
     public static final String BUNDLE_SCAN_ITEM_INDICATOR = "bundle_scan_item_indicator";
+    public static final String BUNDLE_SCANNED_BARCODE_LIST = "bundle_scanned_barcode_list";
     private static final int PHOTO_ACTIVITY_REQUEST_CARMERA_AND_READ_WRITE = 50;
     private static final String[] PHOTO_ACTIVITY_CAMERA_PERMISSIONS = {Manifest.permission.CAMERA};
     FrameLayout mScannerContainer;
@@ -57,9 +58,15 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
     private int mBarCodeCount;
 
     ArrayList<String> mPrefetchList;
+    ArrayList<String> mScannedList;
     private String mItemIndicator;
     private MediaPlayer mediaPlayer;
 
+    private enum ValidationResult {
+        INVALID,
+        VALID,
+        SCANNED
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,6 +74,7 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
 
         mBarCodeCount = getIntent().getIntExtra(BUNDLE_SCAN_ITEM_COUNT, 0);
         mPrefetchList = getIntent().getStringArrayListExtra(BUNDLE_PREFETCH_BARCODE_LIST);
+        mScannedList = getIntent().getStringArrayListExtra(BUNDLE_SCANNED_BARCODE_LIST);
         mItemIndicator = getIntent().getStringExtra(BUNDLE_SCAN_ITEM_INDICATOR);
         if (mPrefetchList != null) {
             mBarCodeCount = mPrefetchList.size();
@@ -205,10 +213,14 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
 
     private void addBarcode(String barcode) {
 
-        if (!validateBarcode(barcode)) {
-            //show dialog
-            showInvalidBarCodeDialog(barcode);
-            return;
+        ValidationResult result = validateBarcode(barcode);
+        switch (result) {
+            case INVALID:
+                showInvalidBarCodeDialog(barcode);
+                return;
+            case SCANNED:
+                Toast.makeText(BarCodeActivity.this, getString(R.string.item_already_scaned), Toast.LENGTH_SHORT).show();
+                return;
         }
 
         if (!mBarCodeList.contains(barcode)) {
@@ -241,14 +253,24 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
 
     }
 
-    private boolean validateBarcode(String barCode) {
+    private ValidationResult validateBarcode(String barCode) {
 
         //Check in data
         if (mPrefetchList != null && !mPrefetchList.contains(barCode)) {
-            return false;
+            //Check if barcode was previously scanned
+            if (mScannedList != null && mScannedList.contains(barCode)) {
+                return ValidationResult.SCANNED;
+            } else {
+                return ValidationResult.INVALID;
+            }
         }
+
         //verhoeff check
-        return Verhoeff.validateVerhoeff(barCode);
+        if (Verhoeff.validateVerhoeff(barCode)) {
+            return ValidationResult.VALID;
+        }
+
+        return ValidationResult.INVALID;
     }
 
     private void updateBarcodeInfo() {
