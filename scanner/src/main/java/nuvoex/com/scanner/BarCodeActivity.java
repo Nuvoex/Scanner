@@ -293,7 +293,11 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
 
     private void onDoneButtonClick() {
         if (mBarCodeList.size() == 0) {
-            Toast.makeText(this, getString(R.string.no_item_scan), Toast.LENGTH_SHORT).show();
+            if (mScannedList != null && !mScannedList.isEmpty()) {
+                finish();
+            } else {
+                Toast.makeText(this, getString(R.string.no_item_scan), Toast.LENGTH_SHORT).show();
+            }
             return;
         }
         scanComplete();
