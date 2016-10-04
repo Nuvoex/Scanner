@@ -86,7 +86,7 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
         mPrefetchList = getIntent().getStringArrayListExtra(BUNDLE_PREFETCH_BARCODE_LIST);
         mScannedList = getIntent().getStringArrayListExtra(BUNDLE_SCANNED_BARCODE_LIST);
         mItemIndicator = getIntent().getStringExtra(BUNDLE_SCAN_ITEM_INDICATOR);
-        if (TextUtils.isEmpty(mItemIndicator)) {
+        if (mItemIndicator == null) {
             mItemIndicator = "";
         }
         if (mPrefetchList != null) {
