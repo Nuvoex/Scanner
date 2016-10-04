@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         barcodes.add("3545");
         intent.putStringArrayListExtra(BarCodeActivity.BUNDLE_PREFETCH_BARCODE_LIST, barcodes);
         intent.putExtra(BarCodeActivity.BUNDLE_SKIP_CHECKSUM, true);
+        intent.putExtra(BarCodeActivity.BUNDLE_ALLOW_EMPTY_RESULT, false);
         startActivityForResult(intent, 0);
     }
 
