@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -40,6 +41,7 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
     public static final String BUNDLE_SCAN_ITEM_INDICATOR = "bundle_scan_item_indicator";
     public static final String BUNDLE_SCANNED_BARCODE_LIST = "bundle_scanned_barcode_list";
     public static final String BUNDLE_SKIP_CHECKSUM = "bundle_skip_checksum";
+    public static final String BUNDLE_USE_INPUT_ALPHA_NUMERIC = "bundle_use_input_type_alpha_numeric";
     private static final int PHOTO_ACTIVITY_REQUEST_CARMERA_AND_READ_WRITE = 50;
     private static final String[] PHOTO_ACTIVITY_CAMERA_PERMISSIONS = {Manifest.permission.CAMERA};
     FrameLayout mScannerContainer;
@@ -64,6 +66,7 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
     private MediaPlayer mediaPlayer;
 
     private boolean mSkipChecksum;
+    private boolean mIsInputAlphaNumeric;
 
     private enum ValidationResult {
         INVALID,
@@ -83,6 +86,7 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
             mBarCodeCount = mPrefetchList.size();
         }
         mSkipChecksum = getIntent().getBooleanExtra(BUNDLE_SKIP_CHECKSUM, false);
+        mIsInputAlphaNumeric = getIntent().getBooleanExtra(BUNDLE_USE_INPUT_ALPHA_NUMERIC, false);
 
         setContentView(R.layout.activity_bar_code);
         initView();
@@ -133,6 +137,10 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
 
         mBarCodeEditText = (EditText) findViewById(R.id.qrCodeValue);
         mBarcodeCountInfo = (TextView) findViewById(R.id.barcode_count);
+
+        if(mIsInputAlphaNumeric) {
+            mBarCodeEditText.setInputType(InputType.TYPE_CLASS_TEXT);
+        }
 
         flash = findViewById(R.id.flash);
     }
