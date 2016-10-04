@@ -41,6 +41,8 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
     public static final String BUNDLE_SCANNED_BARCODE_LIST = "bundle_scanned_barcode_list";
     public static final String BUNDLE_SKIP_CHECKSUM = "bundle_skip_checksum";
     public static final String BUNDLE_USE_INPUT_ALPHA_NUMERIC = "bundle_use_input_type_alpha_numeric";
+    public static final String BUNDLE_CONFIRM_SUBMIT = "bundle_confirm_submit";
+    public static final String BUNDLE_ALLOW_EMPTY_RESULT = "bundle_allow_empty_result";
     private static final int PHOTO_ACTIVITY_REQUEST_CARMERA_AND_READ_WRITE = 50;
     private static final String[] PHOTO_ACTIVITY_CAMERA_PERMISSIONS = {Manifest.permission.CAMERA};
     FrameLayout mScannerContainer;
@@ -67,6 +69,8 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
 
     private boolean mSkipChecksum;
     private boolean mIsInputAlphaNumeric;
+    private boolean mConfirmSubmit;
+    private boolean mAllowEmptyResult;
 
     private enum ValidationResult {
         INVALID,
@@ -82,11 +86,16 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
         mPrefetchList = getIntent().getStringArrayListExtra(BUNDLE_PREFETCH_BARCODE_LIST);
         mScannedList = getIntent().getStringArrayListExtra(BUNDLE_SCANNED_BARCODE_LIST);
         mItemIndicator = getIntent().getStringExtra(BUNDLE_SCAN_ITEM_INDICATOR);
+        if (mItemIndicator == null) {
+            mItemIndicator = "";
+        }
         if (mPrefetchList != null) {
             mBarCodeCount = mPrefetchList.size();
         }
         mSkipChecksum = getIntent().getBooleanExtra(BUNDLE_SKIP_CHECKSUM, false);
         mIsInputAlphaNumeric = getIntent().getBooleanExtra(BUNDLE_USE_INPUT_ALPHA_NUMERIC, false);
+        mConfirmSubmit = getIntent().getBooleanExtra(BUNDLE_CONFIRM_SUBMIT, false);
+        mAllowEmptyResult = getIntent().getBooleanExtra(BUNDLE_ALLOW_EMPTY_RESULT, false);
 
         setContentView(R.layout.activity_bar_code);
         initView();
@@ -309,7 +318,23 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
         mBarCodeEditText.setHint(getString(R.string.qr_hint, mItemIndicator));
     }
 
+    private void submitBarcodes() {
+        if (!mAllowEmptyResult && mBarCodeList.size() == 0) {
+            if (mScannedList != null && !mScannedList.isEmpty()) {
+                finish();
+            } else {
+                Toast.makeText(BarCodeActivity.this, getString(R.string.no_item_scan), Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+        scanComplete();
+    }
+
     private void onDoneButtonClick() {
+        if (!mConfirmSubmit) {
+            submitBarcodes();
+            return;
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.confirm_dialog_title);
@@ -317,15 +342,7 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (mBarCodeList.size() == 0) {
-                    if (mScannedList != null && !mScannedList.isEmpty()) {
-                        finish();
-                    } else {
-                        Toast.makeText(BarCodeActivity.this, getString(R.string.no_item_scan), Toast.LENGTH_SHORT).show();
-                    }
-                    return;
-                }
-                scanComplete();
+                submitBarcodes();
             }
         });
 
@@ -346,6 +363,7 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
             mBarCodeEditText.setText("");
         }
     }
+
     private void scanComplete() {
         Intent intent = new Intent();
         intent.putStringArrayListExtra(BUNDLE_BARCODE_LIST, (ArrayList<String>) mBarCodeList);
