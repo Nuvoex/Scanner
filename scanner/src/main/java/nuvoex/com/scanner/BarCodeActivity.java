@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -47,6 +46,7 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
     FrameLayout mScannerContainer;
 
     Button mDone;
+    Button mBtnSubmitCode;
 
     Toolbar mToolbar;
     EditText mBarCodeEditText;
@@ -119,6 +119,14 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
                 return false;
             }
         });
+
+        mBtnSubmitCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onSubmitClicked();
+            }
+        });
+
         updateBarcodeInfo();
         if (!hasPermissions(PHOTO_ACTIVITY_CAMERA_PERMISSIONS)) {
             checkPermissionCamera();
@@ -143,6 +151,8 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
         }
 
         flash = findViewById(R.id.flash);
+
+        mBtnSubmitCode = (Button) findViewById(R.id.currentCodeSubmitBtn);
     }
 
 
@@ -300,17 +310,42 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
     }
 
     private void onDoneButtonClick() {
-        if (mBarCodeList.size() == 0) {
-            if (mScannedList != null && !mScannedList.isEmpty()) {
-                finish();
-            } else {
-                Toast.makeText(this, getString(R.string.no_item_scan), Toast.LENGTH_SHORT).show();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.confirm_dialog_title);
+        builder.setMessage(R.string.confirm_dialog_msg);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (mBarCodeList.size() == 0) {
+                    if (mScannedList != null && !mScannedList.isEmpty()) {
+                        finish();
+                    } else {
+                        Toast.makeText(BarCodeActivity.this, getString(R.string.no_item_scan), Toast.LENGTH_SHORT).show();
+                    }
+                    return;
+                }
+                scanComplete();
             }
-            return;
-        }
-        scanComplete();
+        });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
     }
 
+    private void onSubmitClicked() {
+        String barcode = mBarCodeEditText.getText().toString();
+        if (!TextUtils.isEmpty(barcode)) {
+            mScanner.stopCameraPreview();
+            addBarcode(barcode);
+            mBarCodeEditText.setText("");
+        }
+    }
     private void scanComplete() {
         Intent intent = new Intent();
         intent.putStringArrayListExtra(BUNDLE_BARCODE_LIST, (ArrayList<String>) mBarCodeList);

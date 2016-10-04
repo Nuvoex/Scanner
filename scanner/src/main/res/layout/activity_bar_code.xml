@@ -47,29 +47,38 @@
             android:textSize="@dimen/text_size_18"
             tools:text="Scanning 1 of 3" />
 
-        <EditText
-            android:id="@+id/qrCodeValue"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:background="@android:color/transparent"
-            android:imeOptions="actionDone"
-            android:paddingTop="10dp"
-            android:singleLine="true"
-            android:inputType="number"
-            android:textColor="@android:color/white"
-            android:textColorHint="@color/qr_hint"
-            android:textSize="16sp" />
+            android:background="@drawable/input_border"
+            android:layout_margin="@dimen/activity_horizontal_margin">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:background="#80cbc4" />
+            <EditText
+                android:id="@+id/qrCodeValue"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/activity_horizontal_margin"
+                android:background="@android:color/transparent"
+                android:imeOptions="actionDone"
+
+                android:singleLine="true"
+                android:inputType="number"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/qr_hint"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/currentCodeSubmitBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/input_stroke_width"
+                android:background="@android:color/white"
+                android:textColor="@color/qr_bottom_bg"
+                android:text="Submit"/>
+
+        </LinearLayout>
+
 
         <Button
             android:id="@+id/done_btn"

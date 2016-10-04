@@ -21,4 +21,9 @@
     <string name="dialog_invalid_barcode_positive_button">Retry</string>
     <string name="no_item_scan">No items scanned</string>
 
+    <string name="confirm_dialog_title">Done Scanning ?</string>
+    <string name="confirm_dialog_msg">submit all the scanned barcode</string>
+    <string name="ok">OK</string>
+    <string name="cancel">CANCEL</string>
+
 </resources>
