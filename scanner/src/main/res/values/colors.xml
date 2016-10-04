@@ -33,6 +33,8 @@
     <color name="qr_hint">#80ffffff</color>
     <color name="white">#ffffff</color>
 
+    <color name="input_border">#EEE</color>
+
 
     <!--Text-->
     <color name="text_primary_inverse">#deffffff</color>

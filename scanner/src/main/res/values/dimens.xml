@@ -74,4 +74,7 @@
     <!--Empty Screens-->
     <dimen name="empty_subTitle_margin">4dp</dimen>
     <dimen name="empty_view_text_size">20sp</dimen>
+
+    <dimen name="input_stroke_width">1dp</dimen>
+    <dimen name="input_corner_radius">2dp</dimen>
 </resources>
