@@ -10,14 +10,17 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,7 +44,6 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
     public static final String BUNDLE_SCANNED_BARCODE_LIST = "bundle_scanned_barcode_list";
     public static final String BUNDLE_SKIP_CHECKSUM = "bundle_skip_checksum";
     public static final String BUNDLE_USE_INPUT_ALPHA_NUMERIC = "bundle_use_input_type_alpha_numeric";
-    public static final String BUNDLE_CONFIRM_SUBMIT = "bundle_confirm_submit";
     public static final String BUNDLE_ALLOW_EMPTY_RESULT = "bundle_allow_empty_result";
     private static final int PHOTO_ACTIVITY_REQUEST_CARMERA_AND_READ_WRITE = 50;
     private static final String[] PHOTO_ACTIVITY_CAMERA_PERMISSIONS = {Manifest.permission.CAMERA};
@@ -54,6 +56,7 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
     EditText mBarCodeEditText;
 
     TextView mBarcodeCountInfo;
+    LinearLayout mEditTextContainer;
 
     View flash;
 
@@ -69,7 +72,6 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
 
     private boolean mSkipChecksum;
     private boolean mIsInputAlphaNumeric;
-    private boolean mConfirmSubmit;
     private boolean mAllowEmptyResult;
 
     private enum ValidationResult {
@@ -94,7 +96,6 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
         }
         mSkipChecksum = getIntent().getBooleanExtra(BUNDLE_SKIP_CHECKSUM, false);
         mIsInputAlphaNumeric = getIntent().getBooleanExtra(BUNDLE_USE_INPUT_ALPHA_NUMERIC, false);
-        mConfirmSubmit = getIntent().getBooleanExtra(BUNDLE_CONFIRM_SUBMIT, false);
         mAllowEmptyResult = getIntent().getBooleanExtra(BUNDLE_ALLOW_EMPTY_RESULT, false);
 
         setContentView(R.layout.activity_bar_code);
@@ -129,6 +130,23 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
             }
         });
 
+        mBarCodeEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                     enableSubmitButton(!TextUtils.isEmpty(s));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         mBtnSubmitCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,6 +172,7 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
 
         mBarCodeEditText = (EditText) findViewById(R.id.qrCodeValue);
         mBarcodeCountInfo = (TextView) findViewById(R.id.barcode_count);
+        mEditTextContainer = (LinearLayout) findViewById(R.id.editTextContainer);
 
         if(mIsInputAlphaNumeric) {
             mBarCodeEditText.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -162,6 +181,7 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
         flash = findViewById(R.id.flash);
 
         mBtnSubmitCode = (Button) findViewById(R.id.currentCodeSubmitBtn);
+        enableSubmitButton(false);
     }
 
 
@@ -331,10 +351,6 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
     }
 
     private void onDoneButtonClick() {
-        if (!mConfirmSubmit) {
-            submitBarcodes();
-            return;
-        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.confirm_dialog_title);
@@ -396,6 +412,20 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
             }
         });
         anim.start();
+    }
+
+    private void enableSubmitButton(boolean enable) {
+        mBtnSubmitCode.setEnabled(enable);
+        int backgroundPercent;
+        if (enable) {
+            mBtnSubmitCode.setAlpha(1.0f);
+            backgroundPercent = 100;
+        } else {
+            mBtnSubmitCode.setAlpha(0.05f);
+            backgroundPercent = 20;
+        }
+        mEditTextContainer.getBackground().setAlpha((255*backgroundPercent)/100);
+
     }
 
     @Override
