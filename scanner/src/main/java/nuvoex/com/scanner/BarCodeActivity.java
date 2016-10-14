@@ -113,7 +113,7 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
         mDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onDoneButtonClick();
+                submitBarcodes();
             }
         });
 
@@ -348,27 +348,6 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
             return;
         }
         scanComplete();
-    }
-
-    private void onDoneButtonClick() {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.confirm_dialog_title);
-        builder.setMessage(R.string.confirm_dialog_msg);
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                submitBarcodes();
-            }
-        });
-
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        builder.show();
     }
 
     private void onSubmitClicked() {
