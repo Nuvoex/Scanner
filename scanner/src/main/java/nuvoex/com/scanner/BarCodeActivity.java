@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.nuvoex.library.permission.MarshmallowSupportActivity;
 import com.nuvoex.library.permission.Permission;
@@ -109,6 +110,8 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
         mScanner = new ZXingScannerView(this);
         mScanner.setAutoFocus(true);
         mScannerContainer.addView(mScanner);
+
+        mScanner.setFormats(getRestrictedFormats());
 
         mDone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -421,5 +424,26 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
         super.onDestroy();
         mediaPlayer.release();
         mediaPlayer = null;
+    }
+
+    private List<BarcodeFormat> getRestrictedFormats () {
+
+        // For refrence check https://github.com/zxing/zxing
+
+        List<BarcodeFormat> list = new ArrayList<>();
+
+        // All 1D insdustrial formats
+        list.add(BarcodeFormat.CODE_39);
+        list.add(BarcodeFormat.CODE_93);
+        list.add(BarcodeFormat.CODE_128);
+        list.add(BarcodeFormat.CODABAR);
+        list.add(BarcodeFormat.ITF);
+        list.add(BarcodeFormat.RSS_14);
+        list.add(BarcodeFormat.RSS_EXPANDED);
+
+        // Also QR Code support
+        list.add(BarcodeFormat.QR_CODE);
+
+        return list;
     }
 }
