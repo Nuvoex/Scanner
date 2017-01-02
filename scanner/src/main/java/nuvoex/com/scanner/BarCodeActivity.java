@@ -25,7 +25,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.nuvoex.library.permission.MarshmallowSupportActivity;
 import com.nuvoex.library.permission.Permission;
@@ -115,7 +114,7 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
 
         mSupportedFormatList = (ArrayList<BarcodeFormat>) getIntent().getSerializableExtra(BUNDLE_SUPPORTED_FORMAT_LIST);
         if(mSupportedFormatList != null && mSupportedFormatList.size() > 0) {
-            mScanner.setFormats(mSupportedFormatList);
+            mScanner.setFormats(getSupportedBarCodeFormats(mSupportedFormatList));
         }
         mScannerContainer.addView(mScanner);
 
@@ -430,5 +429,13 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
         super.onDestroy();
         mediaPlayer.release();
         mediaPlayer = null;
+    }
+
+    List<com.google.zxing.BarcodeFormat> getSupportedBarCodeFormats(List<BarcodeFormat> list) {
+        List<com.google.zxing.BarcodeFormat> returnList = new ArrayList<>();
+        for(BarcodeFormat format : list) {
+            returnList.add(Mapper.getZxingBarcodeFor(format));
+        }
+        return returnList;
     }
 }
