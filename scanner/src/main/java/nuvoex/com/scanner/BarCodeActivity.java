@@ -45,6 +45,7 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
     public static final String BUNDLE_SKIP_CHECKSUM = "bundle_skip_checksum";
     public static final String BUNDLE_USE_INPUT_ALPHA_NUMERIC = "bundle_use_input_type_alpha_numeric";
     public static final String BUNDLE_ALLOW_EMPTY_RESULT = "bundle_allow_empty_result";
+    public static final String BUNDLE_SUPPORTED_FORMAT_LIST = "bundle_supported_format_list";
     private static final int PHOTO_ACTIVITY_REQUEST_CARMERA_AND_READ_WRITE = 50;
     private static final String[] PHOTO_ACTIVITY_CAMERA_PERMISSIONS = {Manifest.permission.CAMERA};
     FrameLayout mScannerContainer;
@@ -67,6 +68,7 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
 
     ArrayList<String> mPrefetchList;
     ArrayList<String> mScannedList;
+    ArrayList<BarcodeFormat> mSupportedFormatList;
     private String mItemIndicator;
     private MediaPlayer mediaPlayer;
 
@@ -108,6 +110,11 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
         //init barcodeScanner lib
         mScanner = new ZXingScannerView(this);
         mScanner.setAutoFocus(true);
+
+        mSupportedFormatList = (ArrayList<BarcodeFormat>) getIntent().getSerializableExtra(BUNDLE_SUPPORTED_FORMAT_LIST);
+        if(mSupportedFormatList != null && mSupportedFormatList.size() > 0) {
+            mScanner.setFormats(getSupportedBarCodeFormats(mSupportedFormatList));
+        }
         mScannerContainer.addView(mScanner);
 
         mDone.setOnClickListener(new View.OnClickListener() {
@@ -421,5 +428,13 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
         super.onDestroy();
         mediaPlayer.release();
         mediaPlayer = null;
+    }
+
+    List<com.google.zxing.BarcodeFormat> getSupportedBarCodeFormats(List<BarcodeFormat> list) {
+        List<com.google.zxing.BarcodeFormat> returnList = new ArrayList<>();
+        for(BarcodeFormat format : list) {
+            returnList.add(Mapper.getZxingBarcodeFor(format));
+        }
+        return returnList;
     }
 }
