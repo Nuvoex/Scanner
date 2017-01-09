@@ -46,6 +46,7 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
     public static final String BUNDLE_USE_INPUT_ALPHA_NUMERIC = "bundle_use_input_type_alpha_numeric";
     public static final String BUNDLE_ALLOW_EMPTY_RESULT = "bundle_allow_empty_result";
     public static final String BUNDLE_SUPPORTED_FORMAT_LIST = "bundle_supported_format_list";
+    public static final String BUNDLE_SHOW_MANUAL_INPUT = "bundle_show_manual_input";
     private static final int PHOTO_ACTIVITY_REQUEST_CARMERA_AND_READ_WRITE = 50;
     private static final String[] PHOTO_ACTIVITY_CAMERA_PERMISSIONS = {Manifest.permission.CAMERA};
     FrameLayout mScannerContainer;
@@ -75,6 +76,7 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
     private boolean mSkipChecksum;
     private boolean mIsInputAlphaNumeric;
     private boolean mAllowEmptyResult;
+    private boolean mIsShowingManualInput;
 
     private enum ValidationResult {
         INVALID,
@@ -99,6 +101,7 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
         mSkipChecksum = getIntent().getBooleanExtra(BUNDLE_SKIP_CHECKSUM, false);
         mIsInputAlphaNumeric = getIntent().getBooleanExtra(BUNDLE_USE_INPUT_ALPHA_NUMERIC, false);
         mAllowEmptyResult = getIntent().getBooleanExtra(BUNDLE_ALLOW_EMPTY_RESULT, false);
+        mIsShowingManualInput = getIntent().getBooleanExtra(BUNDLE_SHOW_MANUAL_INPUT, true);
 
         setContentView(R.layout.activity_bar_code);
         initView();
@@ -124,42 +127,42 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
             }
         });
 
-        mBarCodeEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                String barcode = v.getText().toString();
-                if (!TextUtils.isEmpty(barcode)) {
-                    mScanner.stopCameraPreview();
-                    addBarcode(barcode);
-                    v.setText("");
+        if (mIsShowingManualInput) {
+            mBarCodeEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    String barcode = v.getText().toString();
+                    if (!TextUtils.isEmpty(barcode)) {
+                        mScanner.stopCameraPreview();
+                        addBarcode(barcode);
+                        v.setText("");
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
+            mBarCodeEditText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        mBarCodeEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
 
-            }
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    enableSubmitButton(!TextUtils.isEmpty(s));
+                }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                     enableSubmitButton(!TextUtils.isEmpty(s));
-            }
+                @Override
+                public void afterTextChanged(Editable s) {
 
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        mBtnSubmitCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onSubmitClicked();
-            }
-        });
+                }
+            });
+            mBtnSubmitCode.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onSubmitClicked();
+                }
+            });
+        }
 
         updateBarcodeInfo();
         if (!hasPermissions(PHOTO_ACTIVITY_CAMERA_PERMISSIONS)) {
@@ -180,8 +183,10 @@ public class BarCodeActivity extends MarshmallowSupportActivity {
         mBarCodeEditText = (EditText) findViewById(R.id.qrCodeValue);
         mBarcodeCountInfo = (TextView) findViewById(R.id.barcode_count);
         mEditTextContainer = (LinearLayout) findViewById(R.id.editTextContainer);
-
-        if(mIsInputAlphaNumeric) {
+        if (!mIsShowingManualInput) {
+            mEditTextContainer.setVisibility(View.GONE);
+        }
+        if (mIsInputAlphaNumeric) {
             mBarCodeEditText.setInputType(InputType.TYPE_CLASS_TEXT);
         }
 
